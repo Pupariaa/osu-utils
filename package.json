@@ -1,0 +1,24 @@
+{
+  "name": "osu-utils",
+  "version": "1.0.0",
+  "description": "Basics Utils for osu projects",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "osu",
+    "utils",
+    "outils",
+    "osu!",
+    "parser",
+    "format",
+    "mods",
+    "modes"
+  ],
+  "author": "pupariadev",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  }
+}
