@@ -160,10 +160,8 @@ The `ParseMapFile` function is designed to parse a map file and invoke a callbac
 ### Usage:
 
 ```javascript
-ParseMapFile(file, callback)
-
 // Example
-const filePath = '/path/to/beatmap.osu'; // Replace with the actual file path
+const filePath = '/path/to/score.osr'; // Replace with the actual file path
 osuUtils.ParseMapFile(filePath, function (error, parsedData) {
     if (error) {
         console.error(error.message);
