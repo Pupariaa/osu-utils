@@ -150,11 +150,11 @@ console.log(modeNumeric);
 
 ## `ParseMapFile` Function
 
-The `ParseMapFile` function is designed to parse a map file and invoke a callback with the parsed information. It utilizes the `parseBm` module for parsing the beatmap data.
+The `ParseMapFile` function is designed to parse a score file and invoke a callback with the parsed information. It utilizes the `parseBm` module for parsing the beatmap data.
 
 ### Parameters:
 
-- `file` (File Path): A string representing the path to the map file.
+- `file` (File Path): A string representing the path to the score file.
 - `callback` (Callback Function): A callback function that will be invoked with the parsed information or an error. It has the signature `(error: Error | null, parsedData?: any) => void`.
 
 ### Usage:
@@ -241,8 +241,6 @@ osuUtils.ParseMapFile(filePath, function (error, parsedData) {
 | `endTime`          | number    | End time of the slider in milliseconds                  |
 | `curveType`        | string    | Type of slider curve (bezier, linear, catmull)          |
 | `endPosition`      | array     | Final position of the slider (x, y coordinates)        |
-
-
 
 
 ## `BanchoMessage` Function
