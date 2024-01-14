@@ -1,4 +1,8 @@
 # Osu-Utils
+[![npm version](https://img.shields.io/npm/v/osu-utils)]([https://www.npmjs.com/package/osu-utils](https://www.npmjs.com/package/osu-utils))
+[![Downloads](https://img.shields.io/npm/dt/osu-utils)]([https://www.npmjs.com/package/osu-utils)
+
+
 ## Who osu-utils ? 
 Osu Utils is an open source node js library allowing to have many tools for the creation of project related to osu. 
 It includes simple processes such as calculating accuracy but also parsing a score entirely to extract accurate data. 
