@@ -34,6 +34,8 @@ The `CalcAccuracy` function is designed to calculate accuracy for various game m
 ### Usage:
 
 ```javascript
+CalcAccuracy(m, h3, h1, h5, h0, k = 0, g = 0)
+
 try {
     // Example for Standard Mode
     const accuracyStandard = osuUtils.CalcAccuracy(0, 150, 50, 10, 5);
@@ -66,6 +68,8 @@ The `Rank` function is designed to determine the rank based on the provided para
 ### Usage:
 
 ```javascript
+Rank(m, h3, h1, h5, h0, mds = null, pAcc)
+
 try {
     // Example for Standard Mode
     const rankStandard = osuUtils.Rank(0, 150, 50, 10, 5, "HDHR", 98.5);
@@ -96,6 +100,8 @@ The `TimeStampToMs` function is a simple wrapper function that converts a timest
 ### Usage:
 
 ```javascript
+TimeStampToMs(ms) 
+
 // Example
 const timestamp = 1642310400000; // January 17, 2022, 00:00:00 UTC
 const convertedTime = osuUtils.TimeStampToMs(timestamp);
@@ -113,6 +119,8 @@ The `ModsIntToString` function is designed to convert a numeric representation o
 ### Usage:
 
 ```javascript
+ModsIntToString(int)
+
 // Example
 const modsValue = 34; // Numeric representation of mods
 const modNamesString = osuUtils.ModsIntToString(modsValue);
@@ -131,6 +139,8 @@ The `ModeStringToInt` function is designed to convert a mode string into its cor
 ### Usage:
 
 ```javascript
+ModeStringToInt(modeString)
+
 // Example
 const modeString = 'osu'; // Mode string
 const modeNumeric = osuUtils.ModeStringToInt(modeString);
@@ -150,6 +160,8 @@ The `ParseMapFile` function is designed to parse a map file and invoke a callbac
 ### Usage:
 
 ```javascript
+ParseMapFile(file, callback)
+
 // Example
 const filePath = '/path/to/beatmap.osu'; // Replace with the actual file path
 osuUtils.ParseMapFile(filePath, function (error, parsedData) {
@@ -248,6 +260,8 @@ The `BanchoMessage` function is designed to parse a Bancho message and extract r
 ### Usage:
 
 ```javascript
+BanchoMessage(objectMessage)
+
 // Example
 const banchoMessage = {
     content: "joined room Slot1",
