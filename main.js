@@ -16,10 +16,10 @@ const {
 	CaCtb,
 	CaMania
 } = require('./math/accuracy');
-const Mods              = require('./arrays/mods');
-const Modes             = require('./arrays/modes');
-const parseBm           = require('./parser/bm_parser')
-const fs                = require('fs');
+const Mods = require('./arrays/mods');
+const Modes = require('./arrays/modes');
+const parseBm = require('./parser/bm_parser')
+const fs = require('fs');
 
 const {
 	regexChangeMap,
@@ -28,9 +28,18 @@ const {
 	regexMoved
 } = require('./regex/banchoMessages')
 
+const {
+	applyHR,
+	applyEZ,
+	arToMs,
+	msToAr,
+	applyBpmMultiplier,
+	applyLengthMultiplier
+} = require('./math/convertStats');
+
 
 class OsuUtils {
-    
+
 	/**
 	 * Calculate accuracy based on hits and mode.
 	 *
@@ -145,10 +154,10 @@ class OsuUtils {
 	}
 
 	/**
-     * Converts a mode string to its corresponding numeric representation.
-     * @param {string} modeString - Mode string ('osu', 'taiko', 'ctb', 'mania').
-     * @returns {number} - Numeric representation of the mode.
-     */
+	 * Converts a mode string to its corresponding numeric representation.
+	 * @param {string} modeString - Mode string ('osu', 'taiko', 'ctb', 'mania').
+	 * @returns {number} - Numeric representation of the mode.
+	 */
 
 	ModeStringToInt(modeString) {
 		try {
@@ -159,7 +168,84 @@ class OsuUtils {
 			return -1;
 		}
 	}
-    
+
+	/**
+	 * Converts base beatmap stats (CS, OD, AR, HP, BPM, length) based on mods and game mode.
+	 *
+	 * @param {object} stats - Original beatmap stats.
+	 * @param {number} stats.cs - Circle Size.
+	 * @param {number} stats.od - Overall Difficulty.
+	 * @param {number} stats.hp - HP Drain Rate.
+	 * @param {number} stats.ar - Approach Rate.
+	 * @param {number} stats.bpm - Base BPM of the beatmap.
+	 * @param {number} stats.length - Map length in milliseconds.
+	 * @param {number|string} mode - Game mode (0–3 or 'osu', 'taiko', 'ctb', 'mania').
+	 * @param {number} mods - Bitwise integer representing applied mods.
+	 * @returns {object} - New object containing modified stats { cs, od, hp, ar, bpm, length }.
+	 * @throws {Error} - Throws if mode is invalid or conversion fails.
+	 */
+	ConvertStatsWithMods(stats, mode, mods) {
+		try {
+			let modeInt = typeof mode === 'string' ? this.ModeStringToInt(mode) : mode;
+			if (modeInt < 0 || modeInt > 3) throw new Error("Invalid game mode");
+
+			let {
+				cs,
+				od,
+				hp,
+				ar,
+				bpm,
+				length
+			} = stats;
+
+			const hasHR = (mods & Mods.HR) !== 0;
+			const hasEZ = (mods & Mods.EZ) !== 0;
+			const hasDT = (mods & Mods.DT) !== 0;
+			const hasNC = (mods & Mods.NC) !== 0;
+			const hasHT = (mods & Mods.HT) !== 0;
+
+			let clockRate = 1;
+			if (hasDT || hasNC) clockRate = 1.5;
+			else if (hasHT) clockRate = 0.75;
+
+			if (hasHR) {
+				cs = applyHR(cs, 1.3);
+				od = applyHR(od, 1.4);
+				ar = applyHR(ar, 1.4);
+				hp = applyHR(hp, 1.4);
+			}
+
+			if (hasEZ) {
+				cs = applyEZ(cs);
+				od = applyEZ(od);
+				ar = applyEZ(ar);
+				hp = applyEZ(hp);
+			}
+
+			if (modeInt === 0) {
+				let arMs = arToMs(ar);
+				arMs = arMs / clockRate;
+				ar = msToAr(arMs);
+				ar = Math.max(0, Math.min(11, ar));
+			}
+
+			bpm = applyBpmMultiplier(bpm, clockRate);
+			length = applyLengthMultiplier(length, clockRate);
+
+			return {
+				cs: +cs.toFixed(2),
+				od: +od.toFixed(2),
+				hp: +hp.toFixed(2),
+				ar: +ar.toFixed(2),
+				bpm: +bpm.toFixed(2),
+				length: Math.round(length)
+			};
+		} catch (err) {
+			throw err;
+		}
+	}
+
+
 	/**
 	 * Parses a map file and invokes a callback with the parsed information.
 	 * @param {string} file - The path to the map file.
@@ -209,13 +295,13 @@ class OsuUtils {
 	 * @param {string} objectMessage.pseudo - The pseudo (username) associated with the message.
 	 * @returns {?object} - Parsed information in the form of an object, or null if the message is not valid.
 	 */
-	BanchoMessage(objectMessage){
+	BanchoMessage(objectMessage) {
 		const messageContent = objectMessage.content
 		let match
 		if (objectMessage.pseudo === "BanchoBot") {
 			if (regexJoined.test(messageContent)) {
 				match = messageContent.match(regexJoined);
-	
+
 				if (match) {
 					const pseudo = match[1];
 					const slot = parseInt(match[2]);
@@ -225,7 +311,7 @@ class OsuUtils {
 				}
 			} else if (regexMoved.test(messageContent)) {
 				match = messageContent.match(regexMoved);
-	
+
 				if (match) {
 					const pseudo = match[1];
 					const slot = parseInt(match[1]);
