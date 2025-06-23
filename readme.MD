@@ -148,6 +148,47 @@ const modeNumeric = osuUtils.ModeStringToInt(modeString);
 console.log(modeNumeric);
 ```
 
+## `ConvertStatsWithMods` Function
+
+The `ConvertStatsWithMods` function recalculates a beatmap’s base stats (CS, OD, AR, HP, BPM, and length) based on the applied mods and selected game mode. Mods like HR, EZ, DT, NC, and HT are taken into account. The function uses internal pure math helpers for precise calculation and is compatible with both numeric and string-based game modes.
+
+### Parameters:
+
+- `stats` (object): The original beatmap stats:
+  - `cs` (number): Circle Size
+  - `od` (number): Overall Difficulty
+  - `hp` (number): HP Drain Rate
+  - `ar` (number): Approach Rate
+  - `bpm` (number): Original BPM of the beatmap
+  - `length` (number): Total length of the beatmap in milliseconds
+- `mode` (number|string): Game mode (`0`–`3` or `'osu'`, `'taiko'`, `'ctb'`, `'mania'`)
+- `mods` (number): Bitwise integer representing the applied mods
+
+### Returns:
+
+- `{ cs, od, hp, ar, bpm, length }` – A new object containing the modified stats.
+
+### Usage:
+
+```javascript
+const modifiedStats = osuUtils.ConvertStatsWithMods(
+    {
+        cs: 4,
+        od: 7.5,
+        hp: 6.5,
+        ar: 9,
+        bpm: 180,
+        length: 125000
+    },
+    'osu',
+    Mods.HR | Mods.DT
+);
+
+console.log(modifiedStats);
+// Output:
+// { cs: 5.2, od: 10, hp: 9.1, ar: 10.5, bpm: 270, length: 83333 }
+```
+
 ## `ParseMapFile` Function
 
 The `ParseMapFile` function is designed to parse a score file and invoke a callback with the parsed information. It utilizes the `parseBm` module for parsing the beatmap data.
